@@ -55,3 +55,6 @@ z <- c(0.00:pi)
 z <- seq(from = 0, to = 2 * pi, by = 0.01)
 z
 plot(z, sin(z), type = 'l')
+
+
+curve(sin, from = 0, to = 8 * pi)
