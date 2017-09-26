@@ -245,3 +245,40 @@ hotels[, list(price_avg = mean(price_HUF),
 ## j - filtering for columns
 ## by - grouping
 ## ~ SELECT 'j' FROM table WHERE 'i' GROUP BY 'by' in SQL
+
+## TODO identify the cheapest place with rating > 4
+##hotels[rating > 4, min(price_HUF)]
+hotels[rating > 4][order(price_HUF)][1] ## 3 separate data table calls
+
+
+## TODO new column: price_EUR
+hotels$price_EUR <- hotels$price_HUF / 311.26
+hotels[, price_EUR := price_HUF / 311.26] ## define new column the data table way
+
+## TODO visualize price_EUR
+hist(hotels$price_EUR)
+hotels[, hist(price_EUR)]
+hotels[, table(city)] ##freq table for cities
+hotels[, .N, by = city] ##data table way of doing the same as above. .N = nrow
+
+# TODO avg rating, avg stars, avg price per city
+hotels[, list(avg_rating = mean(rating),
+              avg_stars = mean(stars),
+              avg_price = mean(price_EUR))
+       , by = city] ##one NA will result in NA for 'mean'
+
+hotels_by_cities <- hotels[, list(avg_rating = round(mean(rating, na.rm = TRUE), 2),
+              avg_stars = round(mean(stars, na.rm = TRUE), 2),
+              avg_price = round(mean(price_EUR, na.rm = TRUE)))
+       , by = city] ##na.rm = TRUE --> removes NAs from mean
+
+str(hotels_by_cities)
+
+plot(hotels_by_cities$avg_stars, hotels_by_cities$avg_rating)
+
+plot(hotels_by_cities$avg_price, hotels_by_cities$avg_stars)
+
+##merge GDP <- wiki (next class)
+
+# TODO plot the distribution of prices in Hungary
+# TODO % of highly rated hotels in Hungary
