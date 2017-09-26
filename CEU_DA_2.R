@@ -95,3 +95,22 @@ install.packages('pairsD3')
 library(pairsD3)
 
 pairsD3(df)
+
+
+##h2o library -- try at home'
+##install.packages('h2o')
+
+
+## intro stats
+
+t.test(bmi ~ sex, data = df) ##there is a difference, but it's not significant
+?t.test ##compare average of two samples
+
+t.test(height ~ sex, df)
+t.test(weight ~ sex, df)
+
+boxplot(weight ~  sex, df)
+
+## ANOVA 
+aov(height ~ sex, data = df)
+summary(aov(height ~ sex, data = df))
