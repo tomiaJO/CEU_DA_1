@@ -114,3 +114,7 @@ boxplot(weight ~  sex, df)
 ## ANOVA 
 aov(height ~ sex, data = df)
 summary(aov(height ~ sex, data = df))
+
+## post hoc
+TukeyHSD(aov(weight ~ sex, data = df))
+TukeyHSD(aov(height ~ sex, data = df))
