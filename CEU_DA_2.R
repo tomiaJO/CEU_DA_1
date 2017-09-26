@@ -69,3 +69,29 @@ library(beanplot)
 beanplot(df$bmi)
 
 beanplot(bmi ~ sex, df)
+
+table(df$sex)
+table(round(df$ageYear))
+
+##standard charts
+pie(table(round(df$ageYear)))
+pie(table(df$sex))
+
+
+dotchart(table(df$sex))
+dotchart(table(df$sex), xlim = c(0,150))
+
+pairs(df)
+
+##GGally example
+install.packages('GGally')
+library(GGally)
+
+ggpairs(df)
+
+
+##D3 example. no need to write JS code, R will auto-generate it
+install.packages('pairsD3')
+library(pairsD3)
+
+pairsD3(df)
