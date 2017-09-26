@@ -73,4 +73,41 @@ cumsum(x)
 plot(0:99, cumsum(x), type = 's')
 
 #same thing with sample
-sample(c(1, -1), size = 100, replace = TRUE)
+x <- sample(c(1, -1), 
+            size = 100, 
+            replace = TRUE)
+cumsum(x)
+plot(cumsum(x))
+
+h <- c(174, 170, 160)
+w <- c(90, 80, 70)
+plot(h, w,
+     xlab = 'Height',
+     ylab = 'Weight'
+     )
+cor(h,w)
+
+?lm #linear model
+fit <- lm(w ~ h)
+
+predict(fit,
+        newdata = list(h=165))
+
+
+
+proba <- plot(predict(fit,
+        newdata = list(h=c(1:150))))
+
+proba
+
+##data frames
+
+df <- data.frame(
+  height = h,
+  weight = w
+)
+
+str(df) #structure
+
+cor(df)
+plot(df, type = 'l')
