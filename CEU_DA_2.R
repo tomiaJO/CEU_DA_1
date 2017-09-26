@@ -39,6 +39,33 @@ df$weight <- df$weightLb * 0.45359237
 df$bmi <- df$weight / (df$height/100)^2
 str(df)
 
-plot(df$height, df$weight)
-hist(df$heightIn)
-head(df)
+# hist(df$bmi)
+
+# plot(df$height, df$weight)
+# hist(df$heightIn)
+# head(df)
+
+range(df$bmi)
+diff(range(df$bmi))
+
+nrow(df)
+ncol(df)
+dim(df)
+
+
+hist(df$bmi)
+abline(v = c(18.5, 25), col = 'red') ##add lines for normal BMI values
+
+
+plot(density(df$bmi))
+
+boxplot(df$bmi)
+boxplot(bmi ~ round(ageYear), data = df)
+
+#add package
+install.packages('beanplot')
+library(beanplot)
+
+beanplot(df$bmi)
+
+beanplot(bmi ~ sex, df)
