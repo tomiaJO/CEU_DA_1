@@ -118,3 +118,83 @@ summary(aov(height ~ sex, data = df))
 ## post hoc
 TukeyHSD(aov(weight ~ sex, data = df))
 TukeyHSD(aov(height ~ sex, data = df))
+
+
+
+###################
+## intro data.table
+
+df <- read.csv('http://bit.ly/CEU-R-hotels-2017')
+save(df)
+head(df)
+tail(df)
+
+str(df)
+summary(df)
+
+##
+
+boxplot(df$price_HUF ~ df$city)
+hist(df$price_HUF)
+
+?hist
+
+corr(df$city, df$price_HUF)
+
+aov(price_HUF ~ city, data = df)
+
+names(df)
+
+hotels <- df
+
+hist(hotels$price_HUF)
+
+summary(hotels$price_HUF)
+
+hotels[which.max(hotels$price_HUF), ] ##return row with the largest price
+
+##TODO find the cheapest hotel
+hotels[which.min(hotels$price_HUF), ]
+
+
+##TODO list all places with price > 100K HUF
+rows_selected = hotels$price_HUF > 100000
+head(hotels[rows_selected, ])
+
+pricey <- hotels[which(hotels$price_HUF > 100000), ]
+pricey
+
+
+##TODO filter pricey rating < 4
+pricey_and_low_rated = subset(pricey, rating < 4) 
+nrow(pricey_and_low_rated) ##number of places with 100K+ price and rating below 4
+
+hist(pricey_and_low_rated$rating)
+
+##one way to create bins:
+# pricey_and_low_rated$rate_cat <- 1
+# 
+# pricey_and_low_rated[rating > 1, ] ## -> 2
+# pricey_and_low_rated[rating > 2, ] ## -> 3
+# pricey_and_low_rated[rating > 3, ] ## -> 4
+
+pricey_and_low_rated$rate_cat <- cut(pricey_and_low_rated$rating, 4)
+table(pricey_and_low_rated$rate_cat)
+
+pricey_and_low_rated$rate_cat <- cut(pricey_and_low_rated$rating, c(1, 2, 3, 4))
+table(pricey_and_low_rated$rate_cat)
+
+hist(pricey_and_low_rated$rate_cat)
+
+pie(table(pricey_and_low_rated$rate_cat))
+
+
+## TODO cut => price_cat
+## cheap < 10K
+## expensive > 100K
+## average
+
+hotels$price_cat <- cut(hotels$price_HUF, c(0, 10000, median(hotels$price_HUF), 100000), dig.lab = 8)
+table(hotels$price_cat)
+
+hist(hotels$price_cat)
