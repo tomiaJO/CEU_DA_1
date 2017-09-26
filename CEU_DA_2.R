@@ -194,7 +194,24 @@ pie(table(pricey_and_low_rated$rate_cat))
 ## expensive > 100K
 ## average
 
-hotels$price_cat <- cut(hotels$price_HUF, c(0, 10000, median(hotels$price_HUF), 100000), dig.lab = 8)
+hotels$price_cat <- cut(hotels$price_HUF, 
+                        c(0, 10000, 100000, max(hotels$price_HUF)), 
+                        labels = c('cheap', 'average', 'pricey'),
+                        dig.lab = 8)
+str(hotels)
 table(hotels$price_cat)
 
-hist(hotels$price_cat)
+hist(table(hotels$price_cat))
+
+## data.table
+
+install.packages('data.table')
+library(data.table)
+
+
+hotels <- data.table(hotels)
+str(hotels) ## Classes ‘data.table’ and 'data.frame'
+
+## filtering
+hotels[price_HUF > 100000]
+
