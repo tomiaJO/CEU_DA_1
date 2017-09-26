@@ -120,9 +120,7 @@ TukeyHSD(aov(weight ~ sex, data = df))
 TukeyHSD(aov(height ~ sex, data = df))
 
 
-
-###################
-## intro data.table
+## hotels.csv
 
 df <- read.csv('http://bit.ly/CEU-R-hotels-2017')
 save(df)
@@ -203,7 +201,8 @@ table(hotels$price_cat)
 
 hist(table(hotels$price_cat))
 
-## data.table
+###################
+## intro data.table
 
 install.packages('data.table')
 library(data.table)
@@ -214,4 +213,35 @@ str(hotels) ## Classes ‘data.table’ and 'data.frame'
 
 ## filtering
 hotels[price_HUF > 100000]
+hotels[price_HUF > 100000 & rating < 4] # and
+hotels[price_HUF > 100000 | rating < 4] # or
 
+
+## summaries
+hotels[, .N] ## same as nrow(hotels)
+
+## group by
+hotels[, mean(price_HUF)] #same as mean(hotels$price_HUF)
+
+hotels[, mean(price_HUF), by = stars] ## avg price by stars
+
+## name expression, add more than one with 'list'
+hotels_by_stars <- hotels[, list(price_avg = mean(price_HUF),
+              price_min = min(price_HUF),
+              price_max = max(price_HUF))
+       , by = stars] 
+
+## ordering
+setorder(hotels_by_stars, stars, price_min)
+hotels_by_stars
+
+hotels[, list(price_avg = mean(price_HUF),
+                                 price_min = min(price_HUF),
+                                 price_max = max(price_HUF))
+                          , by = stars] [order(stars)]
+
+## dt[i, j, by]
+## i - filtering for rows
+## j - filtering for columns
+## by - grouping
+## ~ SELECT 'j' FROM table WHERE 'i' GROUP BY 'by' in SQL
