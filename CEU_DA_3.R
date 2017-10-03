@@ -137,3 +137,117 @@ ggplot(data = hotels, mapping = aes(x = pricecat)) + geom_bar() + theme_bw()
 
 p <- ggplot(data = hotels, mapping = aes(x = pricecat)) + geom_bar()
 str(p)
+p + theme_classic()
+
+p <- ggplot(data = hotels, mapping = aes(x = pricecat)) + 
+  geom_bar(color = 'orange', fill = 'yellow') +
+  scale_y_log10()
+
+p + scale_y_sqrt()
+p + scale_y_reverse() ## top-down
+p + coord_flip() ## vertical bar chart
+
+p + xlab('') + ylab('N') + ggtitle('Number of hotels per pricecat')
+
+##
+
+ggplot(hotels, aes(citytype)) + geom_bar()
+
+## TODO plot stars using ggplot2
+
+ggplot(data = hotels, mapping = aes(stars)) + geom_bar()
+
+ggplot(data = hotels, mapping = aes(rating)) + geom_bar() + theme_dark()
+ggplot(data = hotels, mapping = aes(rating)) + geom_histogram(binwidth = .25)
+
+ggplot(data = hotels, mapping = aes(price_EUR)) + geom_histogram(binwidth = 10)
+
+
+ggplot(hotels, aes(stars, rating)) + geom_point()
+ggplot(hotels, aes(stars, rating)) + geom_point(alpha = .2)
+
+ggplot(hotels, aes(factor(stars), rating)) + geom_boxplot() ## needed to convert to factor
+
+## hex
+install.packages('hexbin')
+library(hexbin)
+
+ggplot(hotels, aes(stars, rating)) + geom_hex()
+
+## facet
+
+p <- ggplot(hotels, aes(factor(stars), rating)) + 
+  geom_boxplot()
+p + facet_wrap(~ citytype)
+
+hotels[, citytype := factor(citytype, levels = c('small', 'big'))] ##reordering the variable (small first big second)
+p + facet_wrap(~ citytype)
+
+## TODO render a boxplot per stars showing rating split by pricecat
+hotels[, pricecat := factor(pricecat, levels = c('below avg', 'avg', 'above avg'))]
+p <- ggplot(hotels, aes(pricecat, stars)) + 
+  geom_boxplot()
+
+p + facet_wrap(~ citytype)
+
+##
+ggplot(hotels, aes(pricecat, fill = citytype)) + geom_bar()
+ggplot(hotels, aes(pricecat, fill = citytype)) + geom_bar(position = 'dodge')
+
+## density plot
+ggplot(hotels, aes(price_EUR)) + geom_histogram(binwidth = 10)
+ggplot(hotels, aes(price_EUR, fill = citytype)) + geom_density(alpha = .25)
+ggplot(hotels, aes(price_EUR, fill = pricecat)) + geom_density(alpha = .25)
+
+
+p<- ggplot(hotels, aes(rating, price_EUR, color = citytype)) + geom_point()
+
+## famours themes
+install.packages('ggthemes')
+library(ggthemes)
+
+p + theme_economist() + scale_color_economist()
+p + theme_wsj() + scale_color_wsj()
+
+
+
+## create a custom theme for future usage
+theme_custom <- function() {
+  theme(
+    axis.text = element_text(
+      family = 'Times New Roman',
+      color  = "orange",
+      size   = 12,
+      face   = "italic"),
+    axis.title = element_text(
+      family = 'Times New Roman',
+      color  = "orange",
+      size   = 16,
+      face   = "bold"),
+    axis.text.y = element_text(angle = 90, hjust = 0.5),
+    panel.background = element_rect(
+      fill = "orange",
+      color = "white", # => snow
+      size = 2)
+  )
+}
+
+p + theme_custom()
+
+## color brewer
+## http://colorbrewer2.org/
+
+p <- ggplot(hotels, aes(citytype, fill = pricecat)) + geom_bar() 
+p + scale_fill_brewer(palette = 'RdGy')
+
+## TODO plot a barplot on the number of hotels per city type
+ggplot(hotels, aes(citytype)) + geom_bar() 
+
+## TODO plot a histogram on the prices in EUR
+ggplot(hotels, aes(price_EUR)) + geom_histogram(binwidth = 25)
+
+## TODO plot a histogram on the prices in EUR split by city type
+## TODO plot a boxplot on the prices in EUR split by city type
+## TODO plot a scatterplot on the prices in EUR and the distance from city center
+## TODO add a model to the previous plot
+## TODO plot a boxplot on the prices in EUR split by cat(rating)
