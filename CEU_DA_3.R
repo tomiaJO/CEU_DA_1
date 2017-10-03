@@ -118,3 +118,22 @@ hotels[,
        by = city, 
        .SDcols = c('price_EUR', 'rating', 'stars')]
 ?lapply
+
+
+## ===========================================================
+
+hotels <- fread('http://bit.ly/CEU-R-hotels-2017-v2') ##fread - fast read, part of dt package
+
+?write.csv
+?fwrite ## fast writing cs
+
+
+library(ggplot2)
+?ggplot
+
+ggplot(data = hotels, mapping = aes(x = pricecat))
+ggplot(data = hotels, mapping = aes(x = pricecat)) + geom_bar()
+ggplot(data = hotels, mapping = aes(x = pricecat)) + geom_bar() + theme_bw()
+
+p <- ggplot(data = hotels, mapping = aes(x = pricecat)) + geom_bar()
+str(p)
