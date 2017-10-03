@@ -59,4 +59,42 @@ hotels[, pricecat := cut(price_EUR,
                          dig.lab = 8),
        by = city]
 
+##put readable lables on the categories
+hotels[, pricecat := cut(price_EUR, 
+                         breaks = c(0, 
+                                    avg_price_per_city[1] - sd_price_per_city[1], 
+                                    avg_price_per_city[1] + sd_price_per_city[1], 
+                                    Inf), 
+                         labels = c('below avg', 'avg', 'above avg'),
+                         dig.lab = 8),
+       by = city]
+hotels[, .N, by = pricecat]
+
+## TODO new categorical variable: city type (small, big), based on number of hotels
+median_city_size <- median(hotels[, hotel_count := .N, by = city][, hotel_count])
+
+median_city_size
+hotels[, hotel_count := .N, by = city][order(hotel_count)]
+
+hotels[, citytype := cut(hotel_count,
+                          breaks = c(0, median_city_size, Inf),
+                          labels = c('small', 'big')
+                          )]
+## same without specified breaks:
+hotels[, citytype := cut(hotel_count,
+                         breaks = 2,
+                         labels = c('small', 'big')
+)]
+
+hotels[, .N, by = citytype]
+
+## multiple summareis
+hotels[, .N, by = list(pricecat, citytype)][order(pricecat, citytype)]
+
+## TODO new column "P": percentage per citytpye
+price_per_type <- hotels[, .N, by = list(pricecat, citytype)]
+temp[, P:= round(N/sum(N) * 100,2), by = citytype][order(citytype, pricecat)]
+
+## this works as well:
+hotels[, .N, by = list(pricecat, citytype)][, P:= N/sum(N), by = citytype][order(citytype, pricecat)]
 
