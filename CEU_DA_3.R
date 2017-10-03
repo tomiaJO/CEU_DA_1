@@ -98,3 +98,23 @@ temp[, P:= round(N/sum(N) * 100,2), by = citytype][order(citytype, pricecat)]
 ## this works as well:
 hotels[, .N, by = list(pricecat, citytype)][, P:= N/sum(N), by = citytype][order(citytype, pricecat)]
 
+
+## multiple summaries
+hotels[, list(price_avg = round(mean(price_EUR),2),
+              price_max = round(max(price_EUR),2),
+              price_min = round(min(price_EUR),2)),
+       by = city]
+
+
+## mean of price, rating, stars
+hotels[, list(price = round(mean(price_EUR, na.rm = TRUE), 2),
+              rating = round(mean(rating, na.rm = TRUE), 2),
+              stars = round(mean(stars, na.rm = TRUE), 2)),
+       by = city]
+
+## simplified code with lapply for the above:
+hotels[, 
+       lapply(.SD, mean, na.rm = TRUE), 
+       by = city, 
+       .SDcols = c('price_EUR', 'rating', 'stars')]
+?lapply
