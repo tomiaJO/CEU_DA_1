@@ -38,4 +38,25 @@ hotels[, pricecat := cut(price_EUR,
                          breaks = c(0, avg_price - sd_price, avg_price + sd_price, Inf), 
                          dig.lab = 8)]
 
-hotels[, .N, by = pricecat][order(pricecat)]
+hotels[, .N, by = pricecat][order(pricecat)] ##results are skewed
+
+## TODO avg_price per city, and use this to decide if a hotel is cheap or not
+
+hotels[, avg_price_per_city := mean(price_EUR), by = city]
+hotels[, sd_price_per_city := sd(price_EUR), by = city]
+#hotels[, cheap_flag := (price_EUR <= avg_price_per_city)]
+
+##TODO pricecat using the above
+
+## problem to solve - avgs are now not unique numbers, but vectors
+## "Error in cut.default(price_EUR, breaks = c(0, avg_price_per_city - sd_price_per_city,  : 
+## 'breaks' are not unique"
+hotels[, pricecat := cut(price_EUR, 
+                         breaks = c(0, 
+                                    avg_price_per_city[1] - sd_price_per_city[1], 
+                                    avg_price_per_city[1] + sd_price_per_city[1], 
+                                    Inf), 
+                         dig.lab = 8),
+       by = city]
+
+
