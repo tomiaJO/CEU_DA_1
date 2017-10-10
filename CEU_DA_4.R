@@ -91,3 +91,41 @@ ggplot(temp, aes(gdp, price_avg)) + geom_text(aes(label = country))
 
 ## TODO throw out the outlier points (just based on avg price read from the chart)
 ggplot(temp[price_avg < 150, ], aes(gdp, price_avg)) + geom_point(aes(size = cnt)) + geom_smooth(method = 'lm')
+
+## geocoding
+i < - 1
+hotels[i]
+
+for (i in 1:nrow(hotels)) {
+  ##print(i)
+  hotels[i, lon := geocode(...)]
+  hotels[i, lat := geocode(...)]
+}
+
+install.packages('ggmap')
+library(ggmap)
+
+geocode('Budapest, Hungary') ##google api
+geocode('Budapest, Hungary', source = 'dsk') ##data science toolkit
+
+geocodes <- hotels[, .N, by = citycountry]
+for (i in 1:nrow(geocodes)) {
+  geocode <- geocode(geocodes[i, citycountry], source = 'dsk')
+  geocodes[i, lon := geocode$lon]
+  geocodes[i, lat := geocode$lat]
+}
+head(geocodes)
+
+## TODO plot cities on the map with points (size = N)
+?map_data
+worldmap <- map_data('world')
+str(worldmap)
+
+ggplot() + 
+  geom_polygon(data = worldmap, aes(x=long, y=lat, group = group)) +
+  geom_point(data = geocodes, aes(lon, lat, size = N, color = 'red')) +
+  coord_fixed(1.3)
+
+## ggmap
+europe <- get_map(location = 'Berlin', zoom = 4, maptype = 'terrain')
+ggmap(europe) + geom_point(data = geocodes, aes(lon, lat, size = N/25, color = N))
