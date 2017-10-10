@@ -24,22 +24,58 @@ sub('.*, ', '', x)
 hotels[, citycountry := city, by = city]
 setnames[hotels, 'city', 'citycountry'] ## other aproach for the same thing, does not copy the column just renames it
 
-##fix the content of city
+## TODO fix the content of city
 hotels[, city := strsplit(city, ', ')[[1]][1], by = city]
 
-## Count the number of hotels in Hungary
+## TODO ount the number of hotels in Hungary
 hotels[country == 'Hungary', .N]
 
-## Count the number of cities with hotels in Germany
+## TODO Count the number of cities with hotels in Germany
 nrow(hotels[country == 'Germany', .N, by = city])
+hotels[country == 'Germany', length(unique(city))] ## unique ~~ DISTINCT in SQL
 
-## count the avg number of hotels per city
+## TODO count the avg number of hotels per city
 hotels[, .N, by = city][, mean(N)]
 
-## count the avg number of hotels per city per country
+## TODO count the avg number of hotels per city per country
 hotels[, .N, by = c('city', 'country')][, mean(N), by = country]
 
-## compute the percentage of national hotels per city
+## TODO compute the percentage of national hotels per city
 temp <- hotels[, .N, by = c('city', 'country')]
 temp[, N_cntry := sum(N), by = country]
 temp[, N / N_cntry, by = city]
+
+## TODO draw histogram prices of hotels in Hungary with rating > 4.5
+library(ggplot2)
+
+ggplot(hotels[country == 'Hungary' & rating > 4.5, ], aes(price_EUR)) + 
+  geom_histogram(binwidth = 50) + 
+  xlab('') + ylab('') +
+  ggtitle('Number of hotels', subtitle = 'Good hotels in Hungary') +
+  scale_x_continuous(labels = dollar_format(suffix = 'EUR', prefix = ''))
+
+ggplot(hotels[country == 'Hungary' & rating > 4.5, ], aes(factor(1), price_EUR)) + geom_boxplot()
+
+?dollar_format
+
+##### add  GDP
+
+install.packages('XML')
+library(XML)
+
+gdp <- readHTMLTable(readLines('http://bit.ly/CEU-R-gdp'), which = 3)
+head(gdp)
+
+gdp <- data.table(gdp)
+
+gdp[, country := iconv(`Country/Territory`, to = 'ASCII', sub = '')] ##remove special characters
+
+gdp[,  gdp := sub(',', '', `Int$`)]
+gdp[, gdp:= as.numeric(gdp)]
+
+countries <- hotels[, unique(country)]
+countries %in% gdp$country ##check which countries can be found in our list
+
+merge(hotels, gdp,  by = 'country')
+
+head(hotels)
