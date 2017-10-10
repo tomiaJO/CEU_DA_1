@@ -129,3 +129,10 @@ ggplot() +
 ## ggmap
 europe <- get_map(location = 'Berlin', zoom = 4, maptype = 'terrain')
 ggmap(europe) + geom_point(data = geocodes, aes(lon, lat, size = N/25, color = N))
+
+
+## googleway
+install.packages('googleway')
+library(googleway)
+
+##to be finished
