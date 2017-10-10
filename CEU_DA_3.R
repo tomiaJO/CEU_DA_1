@@ -247,7 +247,16 @@ ggplot(hotels, aes(citytype)) + geom_bar()
 ggplot(hotels, aes(price_EUR)) + geom_histogram(binwidth = 25)
 
 ## TODO plot a histogram on the prices in EUR split by city type
+ggplot(hotels, aes(price_EUR)) + geom_histogram(binwidth = 25) + facet_wrap(~ citytype)
+
 ## TODO plot a boxplot on the prices in EUR split by city type
+ggplot(hotels, aes(citytype, price_EUR)) + geom_boxplot()
+
 ## TODO plot a scatterplot on the prices in EUR and the distance from city center
+ggplot(hotels, aes(dist_center_km, price_EUR)) + geom_point(alpha = .2)
+
 ## TODO add a model to the previous plot
+ggplot(hotels, aes(dist_center_km, price_EUR)) + geom_point(alpha = .2) + geom_smooth(method='lm')
+
 ## TODO plot a boxplot on the prices in EUR split by cat(rating)
+ggplot(hotels, aes(cat(rating), price_EUR)) + geom_boxplot()
