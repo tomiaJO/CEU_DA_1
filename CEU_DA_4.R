@@ -76,6 +76,18 @@ gdp[, gdp:= as.numeric(gdp)]
 countries <- hotels[, unique(country)]
 countries %in% gdp$country ##check which countries can be found in our list
 
-merge(hotels, gdp,  by = 'country')
+hotels <- merge(hotels, gdp,  by = 'country') ## left join ... on ...
 
 head(hotels)
+
+## TODO compute the avg price of hotels per country and compare w/ GDP
+temp <- hotels[, list(price_avg = mean(price_EUR), cnt = .N), by = country]
+temp <- merge(temp, gdp[, c('country', 'gdp')], by = 'country')
+
+ggplot(temp, aes(gdp, price_avg, size = cnt)) + geom_point() + geom_smooth(method = 'lm') 
+ggplot(temp, aes(gdp, price_avg)) + geom_point(aes(size = cnt)) + geom_smooth(method = 'lm') ##size can be defined as part of the geom_point as well!
+
+ggplot(temp, aes(gdp, price_avg)) + geom_text(aes(label = country))
+
+## TODO throw out the outlier points (just based on avg price read from the chart)
+ggplot(temp[price_avg < 150, ], aes(gdp, price_avg)) + geom_point(aes(size = cnt)) + geom_smooth(method = 'lm')
