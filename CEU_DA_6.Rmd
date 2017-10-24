@@ -1,0 +1,94 @@
+---
+title: "CEU_DA_6"
+author: "Tamas Koncz"
+date: '2017 October 24 '
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+
+# Title
+
+## Section Title
+
+### Sub-section title
+
+In markdown I can use **bold** and *highlighted*, or I can use _underscores_ around the words.
+***Italic and bold***
+
+
+
+This is a new paragraph.
+
+Some code:
+
+```
+n <- 100
+x <- rnorm(n, 0,1)
+
+summary(x)
+hist(x)
+```
+
+Use r syntax for highlights:
+
+```r
+n <- 100
+x <- rnorm(n, 0,1)
+
+summary(x)
+hist(x)
+```
+Evaluate as well (in R language):
+
+```{r example-chunk}
+n <- 100
+x <- rnorm(n, 0,1)
+
+summary(x)
+hist(x)
+```
+
+Hide code, show only output:
+
+```{r example-chunk2, echo = FALSE}
+n <- 100
+x <- rnorm(n, 0, 1)
+
+summary(x)
+hist(x)
+```
+
+
+
+## Tables
+
+```{r table examples, error = TRUE}
+library(knitr)
+head(iris)
+
+kable(head(iris))
+
+kable(table(iris$Species))
+
+library(pander)
+pander(table(iris$Species))
+
+fit <- lm(Sepal.Length ~ Sepal.Width, iris)
+pander(fit)
+```
+
+## TODO
+
+```{r}
+library(ggplot2)
+library(data.table)
+dt <- data.table(diamonds)
+
+library(pander)
+pander(dt[, mean(price), by = cut])
+
+ggplot(dt, aes(cut, price)) + geom_boxplot()
+```
